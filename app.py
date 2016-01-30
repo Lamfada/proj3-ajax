@@ -19,7 +19,7 @@ import datetime # But we still need time
 from dateutil import tz  # For interpreting local times
 
 # Our own module
-# import acp_limits
+from acp_limits import brevet_calculator
 
 
 ###
@@ -61,15 +61,23 @@ def page_not_found(error):
 ###############
 @app.route("/_calc_times")
 def calc_times():
-  """
-  Calculates open/close times from miles, using rules 
-  described at http://www.rusa.org/octime_alg.html.
-  Expects one URL-encoded argument, the number of miles. 
-  """
-  app.logger.debug("Got a JSON request");
-  miles = request.args.get('miles', 0, type=int)
-  return jsonify(result=miles * 2)
- 
+    """
+    Calculates open/close times from miles, using rules 
+    described at http://www.rusa.org/octime_alg.html.
+    Expects one URL-encoded argument, the number of miles. 
+    """
+    app.logger.debug("Got a JSON request");
+    x = brevet_calculator()
+    leng = request.args.get('brevet_len', 0, type=int)
+    controle = request.args.get('miles', 0, type=float) 
+    base = request.args.get('begin', 0, type=str)
+    
+    message= x.message(leng,controle,base)
+    print("TESTING")
+    return jsonify(result={"message":message})
+
+
+
 #################
 #
 # Functions used within the templates

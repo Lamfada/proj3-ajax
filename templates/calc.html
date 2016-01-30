@@ -50,51 +50,177 @@
 {% endwith %}
 
 <!-- Design on bootstrap grid -->
+
+
+Brevet Length (km):
+<select name="brevet_length" id="brevet_length"> 
+  <option value=200>200</option>
+  <option value=300>300</option>
+  <option value=400>400</option>
+  <option value=600>600</option>
+  <option value=1000>1000</option>
+</select>
+Units:
+<select name="Units" id="Units"> 
+  <option value="km">km</option>
+  <option value="mi">mi</option>
+</select>
+<br>
+<form>
+   Start Date(yyyy-mm-dd):
+  <input type="text" id="date" value=0001-01-01>
+</form>
+<form>
+   Start Time 24-hr (hh:mm):
+   <input type="text" id="time" name="s_time" value=00:00>
+</form>
+
 <form role="form">
 <div class="row">
   <div class="col-md-2">
     <input type="text" class="form-control"
-     name="miles" value="Distance in miles"/>
+     name="miles" value="0" id="dist1" disabled/>
   </div>
   <div class="col-md-4">
     <input type="text" class="form-control"
       name="location" value="location" />
   </div>
   <div class="col-md-4">
-    <span class="times form-control">(times)</span>
+    <pre id="dtime1" class="dtime">Open: 0001-01-01 00:00
+Close: 0001-01-01 01:00</pre>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-2">
     <input type="text" class="form-control"
-     name="miles" value="Distance in miles"/>
+     name="miles" value="Distance"/>
   </div>
   <div class="col-md-4">
     <input type="text" class="form-control"
       name="location" value="location" />
   </div>
   <div class="col-md-4">
-    <span class="times form-control">(times)</span>
+    <pre class="dtime"></pre>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-2">
     <input type="text" class="form-control"
-     name="miles" value="Distance in miles"/>
+     name="miles" value="Distance"/>
   </div>
   <div class="col-md-4">
     <input type="text" class="form-control"
       name="location" value="location" />
   </div>
   <div class="col-md-4">
-    <span class="times form-control">(times)</span>
+    <pre class="dtime"></pre>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-2">
+    <input type="text" class="form-control"
+     name="miles" value="Distance"/>
+  </div>
+  <div class="col-md-4">
+    <input type="text" class="form-control"
+      name="location" value="location" />
+  </div>
+  <div class="col-md-4">
+    <pre class="dtime"></pre>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-2">
+    <input type="text" class="form-control"
+     name="miles" value="Distance"/>
+  </div>
+  <div class="col-md-4">
+    <input type="text" class="form-control"
+      name="location" value="location" />
+  </div>
+  <div class="col-md-4">
+    <pre class="dtime"></pre>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-2">
+    <input type="text" class="form-control"
+     name="miles" value="Distance"/>
+  </div>
+  <div class="col-md-4">
+    <input type="text" class="form-control"
+      name="location" value="location" />
+  </div>
+  <div class="col-md-4">
+    <pre class="dtime"></pre>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-2">
+    <input type="text" class="form-control"
+     name="miles" value="Distance"/>
+  </div>
+  <div class="col-md-4">
+    <input type="text" class="form-control"
+      name="location" value="location" />
+  </div>
+  <div class="col-md-4">
+    <pre class="dtime"></pre>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-2">
+    <input type="text" class="form-control"
+     name="miles" value="Distance"/>
+  </div>
+  <div class="col-md-4">
+    <input type="text" class="form-control"
+      name="location" value="location" />
+  </div>
+  <div class="col-md-4">
+    <pre class="dtime"></pre>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-2">
+    <input type="text" class="form-control"
+     name="miles" value="Distance"/>
+  </div>
+  <div class="col-md-4">
+    <input type="text" class="form-control"
+      name="location" value="location" />
+  </div>
+  <div class="col-md-4">
+    <pre class="dtime"></pre>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-2">
+    <input type="text" class="form-control"
+     name="miles" value="Distance"/>
+  </div>
+  <div class="col-md-4">
+    <input type="text" class="form-control"
+      name="location" value="location" />
+  </div>
+  <div class="col-md-4">
+    <pre class="dtime"></pre>
   </div>
 </div>
 </form>
 
 <script type="text/javascript">
+  var units = document.getElementById("Units");
+  var brevet_selection = document.getElementById("brevet_length");
 
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
@@ -105,9 +231,16 @@
       $('input[name="miles"]').change(
           // ... execute this function
           function(){
+              
+              var brevet_length = brevet_selection.options[brevet_selection.selectedIndex].value;
+              var base_time = document.getElementById("date").value +" " +document.getElementById("time").value;
               var e_miles = $(this).val();
+              <!--Convert to km if needed-->
+              if(units.options[units.selectedIndex].value=="mi"){
+                  e_miles = e_miles*1.60934;
+              }
 
-              var target = $(this).parents(".row").find(".times");
+              var target = $(this).parents(".row").find(".dtime");
 
               // DEBUG: How do I replace the 'times' field?
               // alert("Content of the field I want to change: " +
@@ -116,15 +249,33 @@
               // AJAX request
               $.getJSON($SCRIPT_ROOT + '/_calc_times',
                   // The object to pass to the server
-                  { miles: e_miles },
+                  { miles: e_miles, brevet_len: brevet_length, begin: base_time},
                   // The function to call with the response
                   function(data) {
                      var times = data.result;
                      // alert("Got a response: " +  times);
-                     target.text(times);
+                     target.text(times.message); // Let app.py handle message formatting
                   }); // End of the call to getJSON
           });  // End of the function to be called when field changes
-              
+
+      // When a field named 's_time' is changed ...
+      $('input[name="s_time"]').change(
+          // ... execute this function
+          function(){             
+              target = document.getElementById("dist1");
+               $('input[id="dist1"]').change();
+              target.value="1";
+              target.value="0";
+              var base_time = document.getElementById("date").value +" " +document.getElementById("time").value;
+              $.getJSON($SCRIPT_ROOT + '//_hour_plus',
+                  // The object to pass to the server
+                  {base: base_time},
+                  // The function to call with the response
+                  function (data) {
+                     var times = data.result;
+                     var ret = "woah";
+                  }); // End of the call to getJSON
+          });  // End of the function to be called when field changes
 
      });   // end of what we do on document ready
 
